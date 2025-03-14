@@ -29,7 +29,7 @@ export default function Login() {
         password: data.password,
       });
       if (result?.error) {
-        toast.error("Invalid username or password. Please try again.");
+        toast.error("اسم المستخدم أو كلمة المرور غير صحيحة.");
       } else {
         router.push("/"); // Redirect to home after successful login
       }
@@ -79,7 +79,7 @@ export default function Login() {
               className="block text-gray-700 text-sm font-bold mb-2"
               htmlFor="password"
             >
-              كلمةالمرور
+              كلمة المرور
             </label>
             <input
               className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline ${
@@ -101,13 +101,13 @@ export default function Login() {
           {/* Submit Button */}
           <div className="flex items-center justify-between gap-1">
             <button
-              disabled={loading}
+              disabled={isSubmitting}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
               type="submit"
             >
               تسجيل الدخول
             </button>
-            {loading && <p className="text-black">جار تسجيل الدخول...</p>}
+            {isSubmitting && <p className="text-black">جار تسجيل الدخول...</p>}
           </div>
         </form>
       </div>
