@@ -1,6 +1,10 @@
 "use client";
 
-import React from "react";
+import { getError } from "@/lib/actions";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 
 interface QuotaData {
   totalDownloadAvailableToYou: string;
@@ -26,7 +30,9 @@ interface SubscriptionStatusProps {
 }
 
 const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ data }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { yourQuota, yourPersonalAccountInfo, serviceData } = data;
+  const router = useRouter();
 
   // Parse subscription expiration date
   const subscriptionExpDate = new Date(yourQuota.subscriptionExpDate);
@@ -42,8 +48,6 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ data }) => {
     isSubscriptionDateEnded ||
     (!isSubscriptionDateEnded && totalDownloadAvailableToYou <= 0);
 
-    
-
   // Parse account balance and current service cost
   const accountBalance = parseFloat(yourPersonalAccountInfo.account);
   const currentServiceCost = parseFloat(
@@ -53,20 +57,25 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ data }) => {
   // Check if the user has enough balance to renew
   const hasSufficientFunds = accountBalance >= currentServiceCost;
 
+  const isTheServiceRenewing = isSubscriptionDateEnded && hasSufficientFunds;
+
   // Renew Functionality
   async function renew() {
-<<<<<<< HEAD
     alert(`هل انت بالفعل تريد تجديد الباقة الان. سيتم خصم ${currentServiceCost}ج من رصيدك`)
     setIsLoading(true);
-=======
->>>>>>> 1e4b0119b90cfb18a262c778f779a22e661d541d
     try {
-        
+      const { data } = await axios.post("/api/renew", {
+        currentService: serviceData.currentService,
+      });
+      setIsLoading(true);
+      toast.success(data.msg);
     } catch (error) {
-        
+      toast.error(getError(error));
+    } finally {
+      setIsLoading(false);
+      router.refresh();
     }
   }
-  
 
   return (
     <div
@@ -81,7 +90,6 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ data }) => {
           <span className="font-semibold">تاريخ انتهاء الاشتراك:</span>{" "}
           {subscriptionExpDate.toLocaleDateString("ar-EG")}
         </p>
-<<<<<<< HEAD
 
         {!isTheServiceRenewing &&
           (isTheServiceMustBeRenewed ? (
@@ -94,18 +102,6 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ data }) => {
               {subscriptionExpDate.toLocaleDateString("ar-EG")} .
             </p>
           ))}
-=======
-        {isTheServiceMustBeRenewed ? (
-          <p className="text-red-600 font-semibold mt-2">
-            انتهى اشتراكك. يرجى تجديده للاستمرار في الخدمة.
-          </p>
-        ) : (
-          <p className="text-green-600 font-semibold mt-2">
-            اشتراكك نشط. يمكنك الاستمتاع بالخدمة حتى{" "}
-            {subscriptionExpDate.toLocaleDateString("ar-EG")}.
-          </p>
-        )}
->>>>>>> 1e4b0119b90cfb18a262c778f779a22e661d541d
       </div>
 
       {/* الرصيد وتكلفة الخدمة */}
@@ -119,18 +115,16 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ data }) => {
         </p>
       </div>
 
-<<<<<<< HEAD
       {/* رسالة التجديد */}
       {isTheServiceMustBeRenewed && !isTheServiceRenewing && (
-=======
-      {/* Renewal Message */}
-      {isTheServiceMustBeRenewed && (
->>>>>>> 1e4b0119b90cfb18a262c778f779a22e661d541d
         <div className="mt-4">
           {hasSufficientFunds ? (
             <p className="text-green-600 font-semibold whitespace-normal break-words text-wrap">
               رصيدك كافٍ لتجديد الاشتراك.{" "}
-              <button onClick={renew} className="text-blue-600 underline hover:text-blue-700">
+              <button
+                onClick={renew}
+                className="text-blue-600 underline hover:text-blue-700"
+              >
                 اضغط هنا للتجديد
               </button>
             </p>
@@ -141,7 +135,6 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ data }) => {
           )}
         </div>
       )}
-<<<<<<< HEAD
 
       {/* حالة التجديد */}
       {isLoading && (
@@ -154,8 +147,6 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({ data }) => {
           تم تجديد الباقة. انتظر من 5 إلى 10 دقائق وسيتم تفعيل الخدمة تلقائيًا.
         </p>
       )}
-=======
->>>>>>> 1e4b0119b90cfb18a262c778f779a22e661d541d
     </div>
   );
 };

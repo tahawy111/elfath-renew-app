@@ -128,8 +128,6 @@ export async function loginToSite(page: Page, username: string, password: string
       "tbody tr:nth-child(2) td p:nth-child(3) font"
     );
 
-    console.log("Successfully logged in!");
-    
     if (checkQueryAfterReloadHandle) {
       return { error: "اسم المستخدم غير صحيح أو كلمة المرور!" };
     }
