@@ -55,17 +55,12 @@ export async function POST(req: Request) {
 
   let browser;
   try {
-    // Launch Puppeteer browser
-<<<<<<< HEAD:app/api/renew/route.ts
     browser = await puppeteer.launch({
       args: ["--no-sandbox", "--disable-setuid-sandbox"],
     });
     const context = await browser.createBrowserContext();
     const page = await context.newPage();
-=======
-    browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
->>>>>>> 1e4b0119b90cfb18a262c778f779a22e661d541d:app/api/getdata/route.ts
+
 
     // Log in to the site
     const result = (await loginToSite(page, username, password)) as IUserData;
